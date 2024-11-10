@@ -6,9 +6,10 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <PlantPage />
+      <PlantPage /> {/* PlantPage handles state, fetching, and UI logic */}
     </div>
   );
 }
 
 export default App;
+
