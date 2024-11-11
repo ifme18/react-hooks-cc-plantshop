@@ -44,3 +44,4 @@ function PlantCard({ plant, onToggleSoldOut, onUpdatePrice, onDelete }) {
 }
 
 export default PlantCard;
+

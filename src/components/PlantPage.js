@@ -18,22 +18,25 @@ function handleAddPlant(newPlant) {
   setPlants([...plants, newPlant])
 }
 
-function handleToggleSoldOut(id, soldOut) {
-  fetch(`http://localhost:6001/plants/${id}`, {
+function handleToggleSoldOut(plantId, soldOutStatus) {
+  fetch(`http://localhost:6001/plants/${plantId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ soldOut }),
+    body: JSON.stringify({ soldOut: soldOutStatus }),
   })
-  .then((response) => response.json())
-  .then((updatedPlant) => {
-    const updatedPlants = plants.map((plant) =>
-    plant.id === id ? {...plant, soldOut: updatedPlant.soldOut } : plant
-    )
-    setPlants(updatedPlants)
-  })
+    .then((res) => res.json())
+    .then((updatedPlant) => {
+      setPlants((prevPlants) =>
+        prevPlants.map((plant) =>
+          plant.id === plantId ? { ...plant, soldOut: updatedPlant.soldOut } : plant
+        )
+      );
+    })
+    .catch((error) => console.error("Error updating sold out status:", error));
 }
+
 
 function handleUpdatePrice(id, newPrice) {
   fetch(`http://localhost:6001/plants/${id}`, {
