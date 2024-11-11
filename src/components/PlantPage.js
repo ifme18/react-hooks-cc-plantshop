@@ -5,33 +5,83 @@ import Search from "./Search";
 
 function PlantPage() {
   const [plants, setPlants] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [SearchTerm, setSearchTerm] = useState("");
 
-  // Fetch all plants
   useEffect(() => {
     fetch("http://localhost:6001/plants")
-      .then((res) => res.json())
-      .then((data) => setPlants(data))
-      .catch((error) => console.error("Error fetching plant data:", error));
+    .then((response) => response.json())
+    .then((data) => setPlants(data))
   }, []);
 
-  function handleAddPlant(newPlant) {
-    setPlants([...plants, newPlant]);
-  }
 
-  function handleSearch(term) {
-    setSearchQuery(term);
-  }
+function handleAddPlant(newPlant) {
+  setPlants([...plants, newPlant])
+}
 
-  const filteredPlants = plants.filter((plant) =>
-    plant.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+function handleToggleSoldOut(id, soldOut) {
+  fetch(`http://localhost:6001/plants/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ soldOut }),
+  })
+  .then((response) => response.json())
+  .then((updatedPlant) => {
+    const updatedPlants = plants.map((plant) =>
+    plant.id === id ? {...plant, soldOut: updatedPlant.soldOut } : plant
+    )
+    setPlants(updatedPlants)
+  })
+}
+
+function handleUpdatePrice(id, newPrice) {
+  fetch(`http://localhost:6001/plants/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ price: newPrice })
+  })
+  .then((response) => response.json())
+  .then((updatedPlant) => {
+      setPlants((prevPlants) =>
+        prevPlants.map((plant) => 
+      plant.id === id ? { ...plant, price: updatedPlant.price } : plant
+      )
+    )
+  })
+  .catch((error) => console.error("Error updating price:", error))
+}
+
+
+function handleDeletePlant(id) {
+  fetch(`http://localhost:6001/plants/${id}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (response.ok) {
+        setPlants((prevPlants) => prevPlants.filter((plant) => plant.id !== id));
+      }
+    })
+    .catch((error) => console.error("Error deleting plant:", error));
+}
+
+
+  const filteredPlants = plants.filter((plant) => 
+    plant.name.toLowerCase().includes(SearchTerm.toLowerCase())
+  )
 
   return (
     <main>
       <NewPlantForm onAddPlant={handleAddPlant} />
-      <Search onSearch={handleSearch} />
-      <PlantList plants={filteredPlants} />
+      <Search SearchTerm={SearchTerm} onSearchChange={setSearchTerm}/>
+      <PlantList 
+      plants={filteredPlants} 
+      onToggleSoldOut={handleToggleSoldOut} 
+      onUpdatePrice={handleUpdatePrice}
+      onDelete={handleDeletePlant}
+      />
     </main>
   );
 }

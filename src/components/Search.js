@@ -1,14 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-function Search({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  function handleSearchChange(e) {
-    const term = e.target.value;
-    setSearchTerm(term);
-    onSearch(term); // Call the parent function with the search term
-  }
-
+function Search({ searchTerm, onSearchChange }) {
   return (
     <div className="searchbar">
       <label htmlFor="search">Search Plants:</label>
@@ -17,12 +9,10 @@ function Search({ onSearch }) {
         id="search"
         placeholder="Type a name to search..."
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={(e) => onSearchChange(e.target.value)}
       />
     </div>
   );
 }
 
-export default Search;
-
-
+export default Search
