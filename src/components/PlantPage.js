@@ -7,31 +7,29 @@ function PlantPage() {
   const [plants, setPlants] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch plant data when the component mounts
+  // Fetch all plants
   useEffect(() => {
     fetch("http://localhost:6001/plants")
-      .then((response) => response.json())
-      .then((data) => {
-        // Set the state with the fetched plant data
-        setPlants(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching plant data:", error);
-      });
+      .then((res) => res.json())
+      .then((data) => setPlants(data))
+      .catch((error) => console.error("Error fetching plant data:", error));
   }, []);
+
+  function handleAddPlant(newPlant) {
+    setPlants([...plants, newPlant]);
+  }
 
   function handleSearch(term) {
     setSearchQuery(term);
   }
 
-  // Filter plants based on the search query
   const filteredPlants = plants.filter((plant) =>
     plant.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <main>
-      <NewPlantForm onAddPlant={(newPlant) => setPlants([...plants, newPlant])} />
+      <NewPlantForm onAddPlant={handleAddPlant} />
       <Search onSearch={handleSearch} />
       <PlantList plants={filteredPlants} />
     </main>
@@ -39,4 +37,3 @@ function PlantPage() {
 }
 
 export default PlantPage;
-

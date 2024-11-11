@@ -17,29 +17,15 @@ function NewPlantForm({ onAddPlant }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Send POST request to add the new plant
     fetch("http://localhost:6001/plants", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        image: formData.image,
-        price: parseFloat(formData.price)
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...formData, price: parseFloat(formData.price) })
     })
-    .then(response => response.json())
-    .then(newPlant => {
-      // Call the onAddPlant function passed as a prop to add the new plant
-      onAddPlant(newPlant);
-      // Reset form fields
-      setFormData({
-        name: "",
-        image: "",
-        price: ""
-      });
-    });
+      .then((res) => res.json())
+      .then((newPlant) => onAddPlant(newPlant));
+
+    setFormData({ name: "", image: "", price: "" });
   }
 
   return (

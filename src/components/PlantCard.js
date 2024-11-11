@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 
 function PlantCard({ plant }) {
-  const [isInStock, setIsInStock] = useState(true); // State to manage stock status
+  const [isSoldOut, setIsSoldOut] = useState(false);
 
-  function handleStockToggle() {
-    setIsInStock((prev) => !prev); // Toggle stock status
+  function handleToggleSoldOut() {
+    setIsSoldOut(!isSoldOut);
   }
 
   return (
-    <li className="card" data-testid="plant-item">
-      <img src={plant.image || "https://via.placeholder.com/400"} alt={plant.name} />
+    <li className="card">
+      <img src={plant.image} alt={plant.name} />
       <h4>{plant.name}</h4>
-      <p>Price: ${plant.price}</p>
-      {isInStock ? (
-        <button className="primary" onClick={handleStockToggle}>
-          In Stock
+      <p>Price: ${plant.price.toFixed(2)}</p>
+      {isSoldOut ? (
+        <button className="primary" onClick={handleToggleSoldOut}>
+          Out of Stock
         </button>
       ) : (
-        <button onClick={handleStockToggle}>Out of Stock</button>
+        <button onClick={handleToggleSoldOut}>In Stock</button>
       )}
     </li>
   );
