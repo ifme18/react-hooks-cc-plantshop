@@ -4,9 +4,9 @@ function PlantCard({ plant }) {
   
   const [isInStock, setIsInStock] = useState(true);
 
-  const handleClick = () => {
+  function handleClick() {
     setIsInStock(!isInStock);
-  };
+  }
 
   return (
     <li data-testid="plant-item" key={plant.id} className="card">
